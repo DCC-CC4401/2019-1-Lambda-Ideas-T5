@@ -8,7 +8,7 @@ from .models import Course, Student, Team, Student_Team
 from django.shortcuts import render,redirect
 
 from .forms import CourseForm
-
+from django.db import IntegrityError
 def courses_list(request):
     if request.method=='POST':
         title = request.POST['title']
@@ -22,11 +22,17 @@ def courses_list(request):
                                            semester = semester,
                                            section = section, year = year)
                 messages.error(request, 'El curso que intenta crear ya existe')
+
+            except IntegrityError:
+                messages.error(request, 'Error de datos ingresados')
+
             except Course.DoesNotExist:
                 course = Course.objects.create(title = title, code = code,
                                                semester = semester,
                                                section = section, year = year)
                 course.save()
+
+
         courses = Course.objects.all().order_by('semester')
         return redirect('/courses', {'courses': courses})
 
