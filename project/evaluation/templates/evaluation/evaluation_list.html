@@ -77,7 +77,7 @@ Evaluaciones - Plataforma de evaluación
                         <span onclick="document.getElementById('agregar').style.display='none'" class="w3-button w3-xlarge w3-transparent w3-display-topright" title="Close Modal">×</span>
 
                         <div class="w3-section">
-                            <form name="coursesForm" class="site-form" action="/evaluation/" method="post" >
+                            <form name="coursesForm" class="site-form" onsubmit="return validateAddEvaluation();" action="/evaluation/" method="post" >
                                 {% csrf_token %}
                                 <label for="title">Titulo de Evaluación</label>
                                 <input type="text" id="title" name="title" placeholder="Titulo">
@@ -137,5 +137,31 @@ function goToDetails(evaluation_id) {
 function goToDetailsModify(evaluation_id) {
     location.href= "modify/" + evaluation_id;
 }
+
+
+function notNull(value){
+    return value != "" && value != null;
+}
+
+function validateAddEvaluation(){
+    let title = document.getElementById("title").value;
+    let init = document.getElementById("init_date").value;
+    let fin = document.getElementById("fin_date").value;
+    let rubric = document.getElementById("rubric").value;
+    let course = document.getElementById("course").value;
+
+    if(notNull(title) && notNull(init) && notNull(fin) && notNull(rubric) && notNull(course)){
+        return true;
+    }
+    else{
+        alert("Llene todos los campos antes de crear evaluación!")
+        return false;
+    }
+
+}
+
+
+
+
 </script>
 {% endblock %}
