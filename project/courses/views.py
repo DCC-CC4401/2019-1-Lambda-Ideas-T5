@@ -8,7 +8,7 @@ from .models import Course, Student, Team, Student_Team
 from django.shortcuts import render,redirect
 
 from .forms import CourseForm
-
+from django.db import IntegrityError
 def courses_list(request):
     if request.method=='POST':
         title = request.POST['title']
@@ -18,15 +18,18 @@ def courses_list(request):
         year = request.POST['year']
         if (title != '' and code != '' and semester != '' and section != '' and year != ''):
             try:
-                course = Course.objects.get(title = title, code = code,
+                course = Course.objects.get(code = code,
                                            semester = semester,
                                            section = section, year = year)
-                messages.error(request, 'El curso que intenta crear ya existe')
+                messages.error(request, 'Error en los datos. Puede que el curso que intenta crear ya exista. Verifique que el código de curso no esté registrado')
+
             except Course.DoesNotExist:
                 course = Course.objects.create(title = title, code = code,
                                                semester = semester,
                                                section = section, year = year)
                 course.save()
+
+
         courses = Course.objects.all().order_by('semester')
         return redirect('/courses', {'courses': courses})
 
