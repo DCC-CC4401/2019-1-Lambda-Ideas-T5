@@ -18,13 +18,10 @@ def courses_list(request):
         year = request.POST['year']
         if (title != '' and code != '' and semester != '' and section != '' and year != ''):
             try:
-                course = Course.objects.get(title = title, code = code,
+                course = Course.objects.get(code = code,
                                            semester = semester,
                                            section = section, year = year)
-                messages.error(request, 'El curso que intenta crear ya existe')
-
-            except IntegrityError:
-                messages.error(request, 'Error de datos ingresados')
+                messages.error(request, 'Error en los datos. Puede que el curso que intenta crear ya exista. Verifique que el código de curso no esté registrado')
 
             except Course.DoesNotExist:
                 course = Course.objects.create(title = title, code = code,
